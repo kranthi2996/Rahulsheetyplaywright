@@ -53,21 +53,45 @@ test('Page FirstPlaywright Test',async ({page}) =>{  //inbuilt feature of plywri
     await expect(page).toHaveTitle("Google");
 })
 
-test.only('ui controls',async({page})=>{
+test('ui controls',async({page})=>{
   const userName=page.locator('#username');
   const password=page.locator('#password');
   const signInBtn=page.locator('#signInBtn');
   const dropdown=page.locator("select.form-control");
+  const documentLink=page.locator("a[href*='documents-request']");
   await page.goto("https://rahulshettyacademy.com/loginpagePractise/#/");
   await userName.fill("rahulshettyacademy");
   await password.fill("Learning@830$3mK2");
   await dropdown.selectOption("consult");
-  expect (page.locator(".radiotextsty").last().click());
+  await page.locator(".radiotextsty").last().click();
   console.log(page.locator(".radiotextsty").last().isChecked()); //boolean for console 
-  page.locator(".radiotextsty").last().toBeChecked(); //assertion
+  await expect(page.locator(".radiotextsty").last()).toBeChecked(); //assertion
   await page.locator('#okayBtn').click();
   await page.locator("#terms").click();
+  await expect(page.locator("#terms")).toBeChecked(); // confirms if its checked or not at current state
+  await page.locator("#terms").uncheck();
+   await expect(page.locator("#terms")).not.toBeChecked(); //confirms if its unchecked or not at current state
+   await expect(documentLink).toHaveAttribute("class","blinkingText");
+});
+
+test.only('Handling multiple tabs',async({page,context})=>{
+  await page.goto("https://rahulshettyacademy.com/loginpagePractise/#/");
+  const documentLink=page.locator("a[href*='documents-request']");   
+ const[newpage]=await Promise.all([
+  context.waitForEvent('page'), //if two activities may go parallely we us e this method
+  documentLink.click()]);
+
+  const text = await newpage.locator(".red").textContent();
+  const arraytext = text.split("@");
+  const domain = arraytext[1].split(" ")[0];
+  console.log(domain);
+  await page.locator("#username").fill(domain);
+  page.pause();
+  console.log(await page.locator("#username").inputValue());
   
-  await page.pause();
-  
+
+
+
+
+
 });
