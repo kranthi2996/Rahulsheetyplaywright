@@ -11,10 +11,12 @@ export default defineConfig({
     timeout: 20*1000,
 
   },
-  
+  reporter: [['html', { open: 'always' }]],
   use: {
     browserName: 'webkit',
     headless: false,
+    screenshot:'only-on-failure',
+    trace:'on'
   
     
   },
