@@ -14,7 +14,7 @@ export default defineConfig({
   reporter: [['html', { open: 'always' }]],
   use: {
     browserName: 'webkit',
-    headless: false,
+    headless: true,
     screenshot:'only-on-failure',
     trace:'on'
   
